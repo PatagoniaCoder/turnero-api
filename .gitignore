@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # SQLiteDB
-test_turnerodb
+test_turnerodb.sql
