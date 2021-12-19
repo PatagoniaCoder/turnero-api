@@ -4,6 +4,9 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { AuthModule } from "../../src/auth/auth.module";
 import { loginMock, registerMock } from '../../test/helpers/mocks';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import mockConnection from '../../test/helpers/mockconection';
 
 
 describe('Auth (e2e)', () => {
@@ -11,7 +14,13 @@ describe('Auth (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AuthModule],
+      imports: [
+        TypeOrmModule.forRoot(mockConnection),
+        ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: ".env-test",
+        }),
+        AuthModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
