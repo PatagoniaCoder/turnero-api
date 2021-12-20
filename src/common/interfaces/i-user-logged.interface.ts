@@ -1,4 +1,4 @@
-export interface UserLogged {
+export interface IUserLogged {
   username: string;
   name: string;
   lastname: string;

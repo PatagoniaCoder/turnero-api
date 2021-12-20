@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthService } from "src/auth/auth.service";
-import { UserLogged } from "src/common/interfaces/user-logged.interface";
+import { IUserLogged } from "src/common/interfaces/i-user-logged.interface";
 import { loginMock } from "test/helpers/mocks";
 
 describe("AuthService", () => {
@@ -19,8 +19,8 @@ describe("AuthService", () => {
   });
 
   it("should return a user login", async () => {
-    const userlogged: UserLogged = await service.login(loginMock);
-    expect(userlogged).toMatchObject<UserLogged>({
+    const userlogged: IUserLogged = await service.login(loginMock);
+    expect(userlogged).toMatchObject<IUserLogged>({
       username: "",
       name: "",
       lastname: "",

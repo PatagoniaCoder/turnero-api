@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { UserLogged } from "src/common/interfaces/user-logged.interface";
-import { Login } from "src/common/interfaces/login.interface";
+import { IUserLogged } from "src/common/interfaces/i-user-logged.interface";
+import { ILogin } from "src/common/interfaces/i-login.interface";
 import { RegisterDto } from "./dtos";
 
 @Injectable()
 export class AuthService {
-  async login(credencial: Login): Promise<UserLogged> {
-    const userlogged: UserLogged = {
+  async login(credencial: ILogin): Promise<IUserLogged> {
+    const userlogged: IUserLogged = {
       username: "",
       name: "",
       lastname: "",

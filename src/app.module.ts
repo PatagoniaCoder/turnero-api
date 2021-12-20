@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TYPEORM_CONFIG } from './shared/config/constants';
+import { UserModule } from './users/user.module';
 import databaseConfig from './shared/config/database.config';
 
 @Module({
@@ -19,7 +20,8 @@ import databaseConfig from './shared/config/database.config';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    AuthModule],
+    AuthModule,
+    UserModule],
   controllers: [AppController],
   providers: [AppService],
 })
