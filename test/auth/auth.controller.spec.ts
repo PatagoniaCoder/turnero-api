@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { AuthController } from "../../src/auth/auth.controller";
-import { resMock,loginMock, registerMock } from "test/helpers/mocks";
+import { AuthController } from "src/auth/auth.controller";
+import { resMock,loginMock, registerMock } from "../../test/helpers/mocks";
 import { AuthService } from "src/auth/auth.service";
 
 describe("AuthController", () => {
@@ -15,7 +15,7 @@ describe("AuthController", () => {
         {
           provide: AuthService,
           useFactory: () => ({
-            login: jest.fn(() => true),
+            login: jest.fn().mockResolvedValue(loginMock),
             register: jest.fn(() => true),
             logout: jest.fn(() => true),
           }),
@@ -40,7 +40,7 @@ describe("AuthController", () => {
     it("should be call with user and pass", () => {
       const login = jest.spyOn(controller, "login");
       controller.login(resMock, loginMock);
-      expect(login).toBeCalledWith(loginMock);
+      expect(login).toBeCalledWith(resMock,loginMock);
     });
 
     it("should auth an user", () => {

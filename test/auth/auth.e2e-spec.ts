@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { AuthModule } from "../../src/auth/auth.module";
+import { AuthModule } from "src/auth/auth.module";
 import { loginMock, registerMock } from '../../test/helpers/mocks';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';

@@ -1,4 +1,4 @@
-import { LoginDto, RegisterDto } from "../../src/auth/dtos";
+import { LoginDto, RegisterDto } from "src/auth/dtos";
 
 export const resMock = {
     status: jest.fn().mockImplementation(() => ({
