@@ -26,10 +26,6 @@ describe("UserService", () => {
         TypeOrmModule.forFeature([UserEntity])],
       providers: [
         UserService,
-        /* {
-          provide: getRepositoryToken(UserEntity),
-          useValue: mockUserRepository,
-        }, */
       ],
     }).compile();
 
@@ -64,16 +60,18 @@ describe("UserService", () => {
       expect(userUpdated).toEqual(userToUpdate)
     })
 
-    xit('should delete an user',async ()=>{
-      await service.delete(1)
-      const userDeleted = await service.findOne({id:1})
+    it('should delete an user',async ()=>{
+      const user = await service.create(registerMock);
+      await service.delete(user.id)
+      const userDeleted = await service.findOne({id:user.id})
       expect(userDeleted).not.toBeDefined()
     })
   });
 
   describe("Change Pass", () => {
     it("should change a user password", async () => {
-      const userUpdated = await service.changePass(changePass, userActive);
+      const user = await service.findOne({id:1})
+      const userUpdated = await service.changePass(changePass, user);
       expect(userUpdated).toEqual("Change succes");
     });
   });

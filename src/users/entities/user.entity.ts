@@ -1,5 +1,5 @@
+import {hash,genSalt} from 'bcrypt'
 import { Entity, PrimaryGeneratedColumn, Column,BeforeInsert,BeforeUpdate } from "typeorm";
-
 @Entity('users')
 export class UserEntity {
 
@@ -22,9 +22,8 @@ export class UserEntity {
     password:string
 
     @BeforeInsert()
-    @BeforeUpdate()
-    encriptPass(){
-        
+    async sertPassword(password:string){
+        const salt = await genSalt()
+        this.password = await hash(password || this.password,salt)
     }
-
 }

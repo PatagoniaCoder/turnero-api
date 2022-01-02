@@ -17,7 +17,7 @@ export const registerMock:IRegister={
 }
 export const changePass:ChangePassDto={
   newpass:'new pass',
-  oldpass:'old pass'
+  oldpass:'string'
 }
 export const userActive:UserDto={
   id:1,

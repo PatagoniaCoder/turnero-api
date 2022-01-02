@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RegisterDto } from "src/auth/dtos";
+import {compare} from 'bcrypt'
 import { IBaseCrud } from "src/common/interfaces/i-base-crud.interface";
 import { IChangePass } from "src/common/interfaces/i-change-pass";
 import { IRegister } from "src/common/interfaces/i-register.interface";
@@ -22,8 +22,13 @@ export class UserService implements IBaseCrud {
       .addSelect("user.password")
       .where("user.id=:id", { id: user.id })
       .getOne();
-    console.log(usertochange.password);
-    return "Change succes";
+    if (await compare(changePass.oldpass,usertochange.password)){
+      await usertochange.sertPassword(changePass.newpass)
+      await this.userRepository.save(usertochange)
+      return "Change succes";
+    }else{
+      return "Wrong Pass"
+    }
   }
   async findAll(): Promise<UserDto[]> {
     return await this.userRepository.find();
