@@ -4,7 +4,7 @@ import { join } from "path";
 const mockConnection: TypeOrmModuleOptions = {
     type:'sqlite',
     driver:require('sqlite3'),
-    database: "test_turnerodb.sql",
+    database: "test_turnerodb.db",
     entities: [join(__dirname, "../src/**/*/*entity.ts")], //['dist/**/*.entity{.ts,.js}'],
     autoLoadEntities: true,
     synchronize: true,

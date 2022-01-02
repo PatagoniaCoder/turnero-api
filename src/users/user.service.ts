@@ -1,25 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { IBaseCrud } from 'src/common/interfaces/i-base-crud.interface';
-import { IChangePass } from 'src/common/interfaces/i-change-pass';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { RegisterDto } from "src/auth/dtos";
+import { IBaseCrud } from "src/common/interfaces/i-base-crud.interface";
+import { IChangePass } from "src/common/interfaces/i-change-pass";
+import { IRegister } from "src/common/interfaces/i-register.interface";
+import { IUser } from "src/common/interfaces/i-user.interface";
+import { Repository } from "typeorm";
+import { UserDto } from "./dtos/user.dto";
+import { UserEntity } from "./entities/user.entity";
 
 @Injectable()
-export class UserService implements IBaseCrud{
-    changePass(changePass: IChangePass) {
-      throw new Error("Method not implemented.");
-    }
-    findAll(): Promise<Object[]> {
-        throw new Error('Method not implemented.');
-    }
-    findOne(options: object): Promise<Object> {
-        throw new Error('Method not implemented.');
-    }
-    create(entity: Object): Promise<Object> {
-        throw new Error('Method not implemented.');
-    }
-    update(id: number, newValue: Object): Promise<Object> {
-        throw new Error('Method not implemented.');
-    }
-    delete(id: number): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+export class UserService implements IBaseCrud {
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>
+  ) {}
+
+  async changePass(changePass: IChangePass, user: UserDto): Promise<any> {
+    const usertochange = await this.userRepository
+      .createQueryBuilder("user")
+      .addSelect("user.password")
+      .where("user.id=:id", { id: user.id })
+      .getOne();
+    console.log(usertochange.password);
+    return "Change succes";
+  }
+  async findAll(): Promise<UserDto[]> {
+    return await this.userRepository.find();
+  }
+  async findOne(options: IUser | object): Promise<UserDto> {
+    return await this.userRepository.findOne(options);
+  }
+  async create(entity: IRegister): Promise<UserDto> {
+    const newUser = this.userRepository.create(entity);
+    await this.userRepository.save(newUser);
+    delete newUser.password;
+    return newUser;
+  }
+  async update(id: number, newValue: IUser): Promise<UserDto> {
+    const userfound = await this.userRepository.findOne({ id });
+    const userUpdated = this.userRepository.merge(userfound, newValue);
+    return await this.userRepository.save(userUpdated);
+  }
+  async delete(id: number): Promise<any> {
+    const userToDelete = await this.userRepository.findOne(id);
+    return await this.userRepository.remove(userToDelete);
+  }
 }
