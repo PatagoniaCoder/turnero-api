@@ -4,8 +4,8 @@ import { ChangePassDto } from "src/users/dtos/change-pass.dto";
 import { UserDto } from "src/users/dtos/user.dto";
 
 export const loginMock: LoginDto={
-    username : "user",
-    password : "pass"
+    username : "email@email.com",
+    password : "string"
 }
 export const registerMock:IRegister={
     firstName:'firstName',

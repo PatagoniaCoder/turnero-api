@@ -17,11 +17,7 @@ export class UserService implements IBaseCrud {
   ) {}
 
   async changePass(changePass: IChangePass, user: UserDto): Promise<any> {
-    const usertochange = await this.userRepository
-      .createQueryBuilder("user")
-      .addSelect("user.password")
-      .where("user.id=:id", { id: user.id })
-      .getOne();
+    const usertochange = await this.getPass(user.id)
     if (await compare(changePass.oldpass,usertochange.password)){
       await usertochange.sertPassword(changePass.newpass)
       await this.userRepository.save(usertochange)
@@ -50,5 +46,19 @@ export class UserService implements IBaseCrud {
   async delete(id: number): Promise<any> {
     const userToDelete = await this.userRepository.findOne(id);
     return await this.userRepository.remove(userToDelete);
+  }
+
+  private async getPass(id:number): Promise<UserEntity>{
+    return await this.userRepository
+    .createQueryBuilder("user")
+    .addSelect("user.password")
+    .where("user.id=:id", { id })
+    .getOne();
+
+  }
+
+  async validateUser(id:number, password:string):Promise<boolean>{
+    const user = await this.getPass(id)
+    return await compare(password,user.password)
   }
 }
