@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TYPEORM_CONFIG } from './shared/config/constants';
 import { UserModule } from './users/user.module';
+import { TurnoModule } from './turno/turno.module';
 import databaseConfig from './shared/config/database.config';
 
 @Module({
@@ -21,7 +22,8 @@ import databaseConfig from './shared/config/database.config';
       envFilePath: '.env',
     }),
     AuthModule,
-    UserModule],
+    UserModule,
+    TurnoModule],
   controllers: [AppController],
   providers: [AppService],
 })
