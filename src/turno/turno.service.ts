@@ -35,7 +35,9 @@ export class TurnoService implements IBaseCrud {
     this.turnoRepository.save(updated)
     return await this.turnoRepository.save(updated)
   }
-  delete(id: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(id: number): Promise<any> {
+    const toDelete = await this.turnoRepository.findOne(id)
+    const deleted= await this.turnoRepository.remove(toDelete)
+    return deleted
   }
 }

@@ -22,7 +22,7 @@ export class UserEntity {
     password:string
 
     @BeforeInsert()
-    async sertPassword(password:string){
+    async setPassword(password:string){
         const salt = await genSalt()
         this.password = await hash(password || this.password,salt)
     }

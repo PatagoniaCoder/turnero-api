@@ -1,27 +1,26 @@
-import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { CreateTurnoDto } from "src/turno/dtos/create-turno.dto";
+import { getRepositoryToken } from "@nestjs/typeorm";
 import { TurnoDto } from "src/turno/dtos/turno.dto";
 import { TurnoEntity } from "src/turno/entities/turno.entity";
-import mockConnection from "test/helpers/mockconection";
-import { mockNewTurno, mockUpdatedTurno } from "test/helpers/mocks";
+import {
+  mockNewTurno,
+  mockTurno,
+  mockTurnoRepository,
+} from "test/helpers/mocks";
 import { TurnoService } from "../../src/turno/turno.service";
 
 describe("TurnoService", () => {
   let service: TurnoService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports:[
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: ".env-test",
-        }),
-        TypeOrmModule.forRoot(mockConnection),
-        TypeOrmModule.forFeature([TurnoEntity]),
+      providers: [
+        TurnoService,
+        {
+          provide: getRepositoryToken(TurnoEntity),
+          useFactory: mockTurnoRepository,
+        },
       ],
-      providers: [TurnoService],
     }).compile();
 
     service = module.get<TurnoService>(TurnoService);
@@ -34,28 +33,33 @@ describe("TurnoService", () => {
   describe("CRUD turno", () => {
     it("should create a turno", async () => {
       const turno = await service.create(mockNewTurno);
-      expect(turno).toMatchObject<TurnoDto>({
-        id: 1,
-        date: mockNewTurno.date,
-        available: mockNewTurno.available,
-      });
+      expect(turno).toMatchObject<TurnoDto>(mockTurno);
     });
 
     it("should find a one turno", async () => {
-      const turnoFound = service.findOne({id:1})
-      expect(turnoFound).toBeDefined()
+      const turnoFound = service.findOne({ id: 1 });
+      expect(turnoFound).toBeDefined();
     });
 
     it("should return array of turnos", async () => {
-      const allTurno=await service.findAll()
-      expect(allTurno.length).toBeGreaterThan(0)
+      const allTurno = await service.findAll();
+      expect(allTurno.length).toBeGreaterThan(0);
     });
 
     it("should update an turno", async () => {
-      const updatedTurno = await service.update(mockUpdatedTurno.id,mockUpdatedTurno)
-      expect(updatedTurno).toEqual(mockUpdatedTurno)
+      const toUpdate = await service.findOne({id:1})
+      toUpdate.available=2
+      const updatedTurno = await service.update(
+        toUpdate.id,
+        toUpdate
+      );
+      expect(updatedTurno).toEqual(toUpdate);
     });
 
-    it("should delete an turno", async () => {});
+    it("should delete an turno", async () => {
+      const deleted = await service.delete(1)
+      expect(deleted).toBe(mockTurno)
+    });
   });
+
 });

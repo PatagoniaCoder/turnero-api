@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {compare} from 'bcrypt'
+import { RegisterDto } from "src/auth/dtos";
 import { IBaseCrud } from "src/common/interfaces/i-base-crud.interface";
-import { IChangePass } from "src/common/interfaces/i-change-pass";
-import { IRegister } from "src/common/interfaces/i-register.interface";
-import { IUser } from "src/common/interfaces/i-user.interface";
 import { Repository } from "typeorm";
+import { ChangePassDto } from "./dtos/change-pass.dto";
 import { UserDto } from "./dtos/user.dto";
 import { UserEntity } from "./entities/user.entity";
 
@@ -16,10 +15,10 @@ export class UserService implements IBaseCrud {
     private userRepository: Repository<UserEntity>
   ) {}
 
-  async changePass(changePass: IChangePass, user: UserDto): Promise<any> {
+  async changePass(changePass: ChangePassDto, user: UserDto): Promise<any> {
     const usertochange = await this.getPass(user.id)
     if (await compare(changePass.oldpass,usertochange.password)){
-      await usertochange.sertPassword(changePass.newpass)
+      await usertochange.setPassword(changePass.newpass)
       await this.userRepository.save(usertochange)
       return "Change succes";
     }else{
@@ -29,16 +28,16 @@ export class UserService implements IBaseCrud {
   async findAll(): Promise<UserDto[]> {
     return await this.userRepository.find();
   }
-  async findOne(options: IUser | object): Promise<UserDto> {
+  async findOne(options: object): Promise<UserDto> {
     return await this.userRepository.findOne(options);
   }
-  async create(entity: IRegister): Promise<UserDto> {
+  async create(entity: RegisterDto): Promise<UserDto> {
     const newUser = this.userRepository.create(entity);
     await this.userRepository.save(newUser);
     delete newUser.password;
     return newUser;
   }
-  async update(id: number, newValue: IUser): Promise<UserDto> {
+  async update(id: number, newValue: UserDto): Promise<UserDto> {
     const userfound = await this.userRepository.findOne({ id });
     const userUpdated = this.userRepository.merge(userfound, newValue);
     return await this.userRepository.save(userUpdated);
