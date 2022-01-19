@@ -12,8 +12,8 @@ export const registerMock: RegisterDto = {
   firstName: "firstName",
   lastName: "lastName",
   email: "email@email.com",
-  password: "string",
-  repassword: "string",
+  password: "string78",
+  repassword: "string78",
   isActive: true,
 };
 export const changePass: ChangePassDto = {

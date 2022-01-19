@@ -5,6 +5,7 @@ import { RegisterDto } from "src/auth/dtos";
 import { IBaseCrud } from "src/common/interfaces/i-base-crud.interface";
 import { Repository } from "typeorm";
 import { ChangePassDto } from "./dtos/change-pass.dto";
+import { UpdateUserDto } from "./dtos/update-user.dto";
 import { UserDto } from "./dtos/user.dto";
 import { UserEntity } from "./entities/user.entity";
 
@@ -32,12 +33,18 @@ export class UserService implements IBaseCrud {
     return await this.userRepository.findOne(options);
   }
   async create(entity: RegisterDto): Promise<UserDto> {
-    const newUser = this.userRepository.create(entity);
-    await this.userRepository.save(newUser);
-    delete newUser.password;
-    return newUser;
+    const newUser = this.userRepository.create({
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      email: entity.email,
+      isActive: entity.isActive,
+      password:entity.password
+    });
+    const saved = await this.userRepository.save(newUser);
+    delete saved.password;
+    return saved;
   }
-  async update(id: number, newValue: UserDto): Promise<UserDto> {
+  async update(id: number, newValue: UpdateUserDto): Promise<UserDto> {
     const userfound = await this.userRepository.findOne({ id });
     const userUpdated = this.userRepository.merge(userfound, newValue);
     return await this.userRepository.save(userUpdated);

@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dtos';
 
@@ -7,7 +8,7 @@ export class AuthController {
     constructor(private authService:AuthService){}
     
     @Post('login')
-    public async login(@Res() res, @Body() body:LoginDto):Promise<any>{
+    public async login(@Res() res:Response, @Body() body:LoginDto):Promise<any>{
         return await this.authService.login(body).then(async (result)=>{
             return await res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
@@ -18,8 +19,8 @@ export class AuthController {
     }
 
     @Post('register')
-    public async register(body:RegisterDto):Promise<any>{
-        return this.authService.register(body)
+    public async register(@Body() body:RegisterDto):Promise<any>{
+        return await this.authService.register(body)
     }
 
     @Get('logout')

@@ -15,7 +15,9 @@ describe("UserController", () => {
         {
           provide: UserService,
           useFactory: () => ({
-            changePass: jest.fn()
+            changePass: jest.fn(),
+            findOne: jest.fn().mockResolvedValue(userActive),
+            update: jest.fn((id,value)=>Object.assign(userActive,value))
           }),
         },
       ],
@@ -42,7 +44,7 @@ describe("UserController", () => {
       };
       await controller.changePass(resMock, body);
 
-      expect(spyService.changePass).toHaveBeenCalledWith(body,userActive);
+      expect(spyService.changePass).toHaveBeenCalledWith(body, userActive);
     });
   });
 
@@ -50,6 +52,15 @@ describe("UserController", () => {
     it("should be a method update", () => {
       const update = jest.spyOn(controller, "update");
       expect(update).toBeDefined();
+    });
+
+    it("should update a user", async () => {
+      const updatedUser = await controller.update(
+        resMock,
+        1,
+        {email:"test@test.com"}
+      );
+      expect(updatedUser.email).toBe('test@test.com');
     });
   });
 });

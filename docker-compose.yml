@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  db:
+    image: 'postgres:alpine3.15'
+    ports:
+    - 55432:5432
+    environment:
+      POSTGRES_PASSWORD: example
+      DATABASE_URL: postgres://postgres@db
+    volumes:
+        - ./db-data:/var/lib/postgresql/data
+

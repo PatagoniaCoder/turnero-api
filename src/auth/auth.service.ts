@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { LoginDto, RegisterDto } from "./dtos";
-import { UserService } from "src/users/user.service";
+import { UserService } from "../users/user.service";
 import { UserLogged } from "./dtos/user-logged.dto";
 
 @Injectable()
