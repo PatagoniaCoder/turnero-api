@@ -1,31 +1,21 @@
-import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
-import { IUser } from "src/common/interfaces/i-user.interface";
-import { UserDto } from "src/users/dtos/user.dto";
-import { UserEntity } from "src/users/entities/user.entity";
-import { UserService } from "src/users/user.service";
-import mockConnection from "test/helpers/mockconection";
-import { changePass, registerMock, userActive } from "test/helpers/mocks";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { RegisterDto } from "../../src/auth/dtos";
+import { UserDto } from "../../src/users/dtos/user.dto";
+import { UserEntity } from "../../src/users/entities/user.entity";
+import { UserService } from "../../src/users/user.service";
+import { changePass, mockUserRepository, registerMock, userActive } from "../../test/helpers/mocks";
+import { FindOneOptions } from "typeorm";
 
 describe("UserService", () => {
   let service: UserService;
-  const mockUserRepository = {
-    create: jest.fn(),
-    save: jest.fn().mockResolvedValue({}),
-  };
 
-  beforeEach(async () => {
+
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports:[
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: ".env-test",
-        }),
-        TypeOrmModule.forRoot(mockConnection),
-        TypeOrmModule.forFeature([UserEntity])],
       providers: [
         UserService,
+        {provide:getRepositoryToken(UserEntity),useFactory:mockUserRepository}
       ],
     }).compile();
 
@@ -61,18 +51,49 @@ describe("UserService", () => {
     })
 
     it('should delete an user',async ()=>{
-      const user = await service.create(registerMock);
-      await service.delete(user.id)
-      const userDeleted = await service.findOne({id:user.id})
-      expect(userDeleted).not.toBeDefined()
+      const user = await service.delete(userActive.id)
+      expect(user).toBeDefined()
     })
   });
 
   describe("Change Pass", () => {
     it("should change a user password", async () => {
       const user = await service.findOne({id:1})
-      const userUpdated = await service.changePass(changePass, user);
+      const userUpdated = await service.changePass(changePass, user.id);
       expect(userUpdated).toEqual("Change succes");
     });
   });
+
+  describe('Call with expected param',()=>{
+    it('should call create method with expected params', async () => {
+      const createSpy = jest.spyOn(service, 'create');
+      const dto = new RegisterDto();
+      service.create(dto);
+      expect(createSpy).toHaveBeenCalledWith(dto);
+    });
+
+    it('should call findOne method with expected param', async () => {
+      const findOneSpy = jest.spyOn(service, 'findOne');
+      const findOneOptions: FindOneOptions = {};
+      service.findOne(findOneOptions);
+      expect(findOneSpy).toHaveBeenCalledWith(findOneOptions);
+    });
+    
+    it('should call update method with expected params', async () => {
+      const updateNoteSpy = jest.spyOn(service, 'update');
+      const id = 1;
+      const dto = new UserDto();
+      service.update(id, dto);
+      expect(updateNoteSpy).toHaveBeenCalledWith(id, dto);
+    });
+  
+    it('should call delete method with expected param', async () => {
+      const deleteNoteSpy = jest.spyOn(service, 'delete');
+      const id = 1;
+      service.delete(id);
+      expect(deleteNoteSpy).toHaveBeenCalledWith(id);
+    });
+  
+
+  })
 });

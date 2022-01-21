@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { ChangePassDto } from "src/users/dtos/change-pass.dto";
-import { UserService } from "src/users/user.service";
-import { resMock, userActive } from "test/helpers/mocks";
+import { ChangePassDto } from "../../src/users/dtos/change-pass.dto";
+import { UserService } from "../../src/users/user.service";
+import { resMock, userActive } from "../../test/helpers/mocks";
 import { UserController } from "../../src/users/user.controller";
 
 describe("UserController", () => {
@@ -15,7 +15,9 @@ describe("UserController", () => {
         {
           provide: UserService,
           useFactory: () => ({
-            changePass: jest.fn()
+            changePass: jest.fn(),
+            findOne: jest.fn().mockResolvedValue(userActive),
+            update: jest.fn((id,value)=>Object.assign(userActive,value))
           }),
         },
       ],
@@ -40,9 +42,9 @@ describe("UserController", () => {
         oldpass: "",
         newpass: "",
       };
-      await controller.changePass(resMock, body);
+      await controller.changePass(resMock,1, body);
 
-      expect(spyService.changePass).toHaveBeenCalledWith(body,userActive);
+      expect(spyService.changePass).toHaveBeenCalledWith(body, 1);
     });
   });
 
@@ -50,6 +52,15 @@ describe("UserController", () => {
     it("should be a method update", () => {
       const update = jest.spyOn(controller, "update");
       expect(update).toBeDefined();
+    });
+
+    it("should update a user", async () => {
+      const updatedUser = await controller.update(
+        resMock,
+        1,
+        {email:"test@test.com"}
+      );
+      expect(updatedUser.email).toBe('test@test.com');
     });
   });
 });

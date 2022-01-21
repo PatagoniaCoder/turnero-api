@@ -105,3 +105,6 @@ dist
 
 # SQLiteDB
 test_turnerodb.db
+
+# PostgresSQL
+db-data
