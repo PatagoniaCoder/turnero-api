@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Res } from '@nestjs/common';
 import { UpdateUserDto, ChangePassDto, UserDto } from './dtos';
 import { UserService } from './user.service';
 
@@ -11,10 +11,9 @@ export class UserController {
         return await this.userService.update(id,body)
     }
 
-    @Post('changepass')
-    public async changePass(@Res() res:any, @Body() body: ChangePassDto){
-        console.log(res.req.user)
+    @Put('changepass/:id')
+    public async changePass(@Res() res:any, @Param('id') id:number, @Body() body: ChangePassDto){
         const user:UserDto=res.req.user
-        return await this.userService.changePass(body,user)
+        return await this.userService.changePass(body,id)
     }
 }

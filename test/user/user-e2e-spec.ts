@@ -5,12 +5,12 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import mockConnection from "../helpers/mockconection";
 import { UserModule } from "../../src/users/user.module";
-import { changePass, loginMock } from '../helpers/mocks'
-import { UserLogged } from "src/auth/dtos/user-logged.dto";
+import { changePass, registerMock, userActive } from "../helpers/mocks";
+import { UserService } from "../../src/users/user.service";
 
 describe("User (e2e)", () => {
   let app: INestApplication;
-  let userLogin:UserLogged
+  let service: UserService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -25,15 +25,21 @@ describe("User (e2e)", () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    service = moduleFixture.get<UserService>(UserService)
     await app.init();
   });
 
-  it("/user/changepass/ (POST)", async()=>{
-    return await request(app.getHttpServer())
-    .post("/users/changepass")
-    .set("Accept", "Application/json")
-    .send(changePass)
-    .expect(HttpStatus.OK);
-
+  afterAll(async ()=>{
+    await app.close()
   })
+
+  it("/user/changepass/ (POST)", async () => {
+    const user = await service.create(registerMock)
+    console.log(user)
+    return await request(app.getHttpServer())
+      .put(`/users/changepass/${userActive.id}`)
+      .set("Accept", "Application/json")
+      .send(changePass)
+      .expect(HttpStatus.CREATED)
+  });
 });

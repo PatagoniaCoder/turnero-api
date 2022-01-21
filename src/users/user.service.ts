@@ -16,10 +16,11 @@ export class UserService implements IBaseCrud {
     private userRepository: Repository<UserEntity>
   ) {}
 
-  async changePass(changePass: ChangePassDto, user: UserDto): Promise<any> {
-    const usertochange = await this.getPass(user.id)
+  async changePass(changePass: ChangePassDto, id: number): Promise<any> {
+    const usertochange = await this.getPass(id)
     if (await compare(changePass.oldpass,usertochange.password)){
       await usertochange.setPassword(changePass.newpass)
+      console.log(usertochange)
       await this.userRepository.save(usertochange)
       return "Change succes";
     }else{
