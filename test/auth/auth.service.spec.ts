@@ -1,16 +1,16 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "../../src/auth/auth.service";
 import { LoginDto, RegisterDto } from "src/auth/dtos";
-import { UserLogged } from "src/auth/dtos/user-logged.dto";
-import { UserEntity } from "src/users/entities/user.entity";
-import { UserService } from "src/users/user.service";
+import { UserLogged } from "../../src/auth/dtos/user-logged.dto";
+import { UserEntity } from "../../src/users/entities/user.entity";
+import { UserService } from "../../src/users/user.service";
 import {
   loginMock,
   mockUserRepository,
   registerMock,
-} from "test/helpers/mocks";
+} from "../../test/helpers/mocks";
 
 describe("AuthService", () => {
   let service: AuthService;

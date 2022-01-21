@@ -29,10 +29,13 @@ describe("Auth (e2e)", () => {
     userService = app.get<UserService>(UserService);
     await app.init();
   });
+  afterAll(async ()=>{
+    await app.close()
+  })
 
   it("/auth/login/ (POST)", async () => {
     await userService.create(registerMock);
-    return await request(app.getHttpServer())
+    return request(await app.getHttpServer())
       .post("/auth/login")
       .set("Accept", "Application/json")
       .send(loginMock)

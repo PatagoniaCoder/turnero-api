@@ -13,7 +13,6 @@ export class UserController {
 
     @Put('changepass/:id')
     public async changePass(@Res() res:any, @Param('id') id:number, @Body() body: ChangePassDto){
-        const user:UserDto=res.req.user
         return await this.userService.changePass(body,id)
     }
 }

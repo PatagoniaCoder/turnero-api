@@ -27,6 +27,7 @@ describe("User (e2e)", () => {
     app = moduleFixture.createNestApplication();
     service = moduleFixture.get<UserService>(UserService)
     await app.init();
+    
   });
 
   afterAll(async ()=>{
@@ -34,12 +35,14 @@ describe("User (e2e)", () => {
   })
 
   it("/user/changepass/ (POST)", async () => {
-    const user = await service.create(registerMock)
-    console.log(user)
-    return await request(app.getHttpServer())
+    await service.create(registerMock)
+    request(await app.getHttpServer())
       .put(`/users/changepass/${userActive.id}`)
       .set("Accept", "Application/json")
       .send(changePass)
       .expect(HttpStatus.CREATED)
+      .expect(({body})=>{
+        expect(body).toBe('Change succes')
+      })
   });
 });

@@ -6,7 +6,7 @@ import { UserDto } from "src/users/dtos/user.dto";
 
 export const loginMock: LoginDto = {
   username: "email@email.com",
-  password: "string",
+  password: "string78",
 };
 export const registerMock: RegisterDto = {
   firstName: "firstName",
@@ -18,7 +18,7 @@ export const registerMock: RegisterDto = {
 };
 export const changePass: ChangePassDto = {
   newpass: "new pass",
-  oldpass: "string",
+  oldpass: "string78",
 };
 export const userActive: UserDto = {
   id: 1,

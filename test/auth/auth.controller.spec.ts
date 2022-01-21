@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { AuthController } from "src/auth/auth.controller";
+import { AuthController } from "../../src/auth/auth.controller";
 import { resMock,loginMock, registerMock } from "../../test/helpers/mocks";
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "../../src/auth/auth.service";
 
 describe("AuthController", () => {
   let controller: AuthController;

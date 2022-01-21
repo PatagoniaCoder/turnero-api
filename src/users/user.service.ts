@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {compare} from 'bcrypt'
 import { RegisterDto } from "src/auth/dtos";
@@ -18,9 +18,9 @@ export class UserService implements IBaseCrud {
 
   async changePass(changePass: ChangePassDto, id: number): Promise<any> {
     const usertochange = await this.getPass(id)
-    if (await compare(changePass.oldpass,usertochange.password)){
+    const canUpdate = await compare(changePass.oldpass,usertochange.password)
+    if (canUpdate){
       await usertochange.setPassword(changePass.newpass)
-      console.log(usertochange)
       await this.userRepository.save(usertochange)
       return "Change succes";
     }else{

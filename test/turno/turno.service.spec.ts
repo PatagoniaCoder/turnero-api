@@ -1,12 +1,12 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { TurnoDto } from "src/turno/dtos/turno.dto";
-import { TurnoEntity } from "src/turno/entities/turno.entity";
+import { TurnoDto } from "../../src/turno/dtos/turno.dto";
+import { TurnoEntity } from "../../src/turno/entities/turno.entity";
 import {
   mockNewTurno,
   mockTurno,
   mockTurnoRepository,
-} from "test/helpers/mocks";
+} from "../../test/helpers/mocks";
 import { TurnoService } from "../../src/turno/turno.service";
 
 describe("TurnoService", () => {

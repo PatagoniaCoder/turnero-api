@@ -1,10 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { RegisterDto } from "src/auth/dtos";
-import { UserDto } from "src/users/dtos/user.dto";
-import { UserEntity } from "src/users/entities/user.entity";
-import { UserService } from "src/users/user.service";
-import { changePass, mockUserRepository, registerMock, userActive } from "test/helpers/mocks";
+import { RegisterDto } from "../../src/auth/dtos";
+import { UserDto } from "../../src/users/dtos/user.dto";
+import { UserEntity } from "../../src/users/entities/user.entity";
+import { UserService } from "../../src/users/user.service";
+import { changePass, mockUserRepository, registerMock, userActive } from "../../test/helpers/mocks";
 import { FindOneOptions } from "typeorm";
 
 describe("UserService", () => {
@@ -59,7 +59,7 @@ describe("UserService", () => {
   describe("Change Pass", () => {
     it("should change a user password", async () => {
       const user = await service.findOne({id:1})
-      const userUpdated = await service.changePass(changePass, user);
+      const userUpdated = await service.changePass(changePass, user.id);
       expect(userUpdated).toEqual("Change succes");
     });
   });
