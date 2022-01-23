@@ -62,6 +62,13 @@ describe("UserService", () => {
       const userUpdated = await service.changePass(changePass, user.id);
       expect(userUpdated).toEqual("Change succes");
     });
+    
+    it("shouldn't change pass with a wrong pass",async ()=>{
+      const user = await service.findOne({id:1})
+      changePass.oldpass='wrong pass'
+      const userUpdated = await service.changePass(changePass, user.id);
+      expect(userUpdated).toEqual("Wrong Pass");
+    })
   });
 
   describe('Call with expected param',()=>{
