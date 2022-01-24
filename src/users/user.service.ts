@@ -55,6 +55,14 @@ export class UserService implements IBaseCrud {
     return await this.userRepository.remove(userToDelete);
   }
 
+  async findUser(options: object): Promise<any> {
+    const user = await this.findOne(options)
+    const userPass = await this.getPass(user.id)
+    return userPass
+
+
+  }
+
   private async getPass(id:number): Promise<UserEntity>{
     return await this.userRepository
     .createQueryBuilder("user")
