@@ -1,0 +1,20 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": [
+    "<rootDir>/src/**",
+    "!<rootDir>/src/migration/**",
+    "!<rootDir>/src/**/dtos/*",
+    "!<rootDir>/src/**/entities/*",
+    "!<rootDir>/src/shared/config/**",
+    "!<rootDir>/src/**/*.module.ts",
+    "!<rootDir>/src/*.module.ts",
+    "!<rootDir>/src/main.ts"
+    
+  ]
+}

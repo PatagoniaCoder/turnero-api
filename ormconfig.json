@@ -1,0 +1,23 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 55432,
+  "username": "postgres",
+  "password": "example",
+  "database": "turnero",
+  "entities": [
+    "/home/alejandro/Trabajo/Porfolio/Backend/Nestjs/turnero-api/dist/**/**/*/*entity{.ts,.js}"
+  ],
+  "autoLoadEntities": true,
+  "migrationsRun": true,
+  "migrations": [
+    "/home/alejandro/Trabajo/Porfolio/Backend/Nestjs/turnero-api/dist/migration/**/*{.ts,.js}"
+  ],
+  "migrationsTableName": "migrations_typeorm",
+  "cli": {
+    "migrationsDir": "src/migration"
+  },
+  "synchronize": false,
+  "logging": true,
+  "logger": "file"
+}
